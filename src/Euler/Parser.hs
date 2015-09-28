@@ -9,11 +9,23 @@ import Data.Yaml (decodeEither)
 
 
 data Configuration = Configuration
-    { components :: [String]
+    { components :: [Component]
     } deriving (Generic)
 
 
+data Component = Component
+    { name :: String
+    , source :: String
+    , source_params :: Maybe [Parameter]
+    , limit :: Maybe Int
+    } deriving (Generic)
+
+
+type Parameter = (String, String)
+
+
 instance FromJSON Configuration
+instance FromJSON Component
 
 
 parseConfiguration :: ByteString -> Either String Configuration

@@ -11,4 +11,4 @@ build config = do
             error $ "Invalid Configuration: " ++ err
 
         Right config' ->
-            return $ show $ components config'
+            return $ show $ map name (components config')

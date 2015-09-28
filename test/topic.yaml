@@ -1,1 +1,7 @@
-components: ['a', 'b']
+components:
+  - name: dove
+    limit: 1
+    source: candy_index
+    # source_params:
+      # group_name: top-story-1
+      # hide_title: true
