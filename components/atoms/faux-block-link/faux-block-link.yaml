@@ -1,0 +1,4 @@
+name: faux-block-link
+dependencies:
+  css: [ atoms/faux-block-link/faux-block-link.css ]
+  js: [ atoms/faux-block-link/faux-block-link.js ]

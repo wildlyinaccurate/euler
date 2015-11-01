@@ -6,5 +6,5 @@ import Euler.Pipeline
 main :: IO ()
 main = do
     input <- BS.getContents
-    res <- build input
-    putStrLn res
+    --res <- build input
+    putStrLn $ build input

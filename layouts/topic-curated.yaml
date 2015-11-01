@@ -1,0 +1,12 @@
+components:
+  - name: dove
+    mandatory: true
+
+  - name: frog
+    mandatory: true
+
+  - name: dove
+    mandatory: false
+
+  - name: kartoffel
+    mandatory: true

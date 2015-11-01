@@ -1,0 +1,5 @@
+name: frog
+dependencies:
+  css: [ atoms/base/base.css, molecules/frog/frog.css ]
+  js: [ atoms/base/lily-pad.js ]
+  elements: [ faux-block-link, group-title ]

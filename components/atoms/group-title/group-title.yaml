@@ -1,0 +1,3 @@
+name: group-title
+dependencies:
+  css: [ atoms/group-title/group-title.css ]

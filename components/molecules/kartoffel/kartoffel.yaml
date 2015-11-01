@@ -1,0 +1,3 @@
+name: kartoffel
+dependencies:
+  js: [ molecules/kartoffel/kartoffel.js ]

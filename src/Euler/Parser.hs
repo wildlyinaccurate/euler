@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
 
 module Euler.Parser where
 
@@ -10,22 +10,13 @@ import Data.Yaml (decodeEither)
 
 data Configuration = Configuration
     { components :: [Component]
-    } deriving (Generic)
+    } deriving (Generic, FromJSON)
 
 
 data Component = Component
     { name :: String
-    , source :: String
-    , source_params :: Maybe [Parameter]
-    , limit :: Maybe Int
-    } deriving (Generic)
-
-
-type Parameter = (String, String)
-
-
-instance FromJSON Configuration
-instance FromJSON Component
+    , mandatory :: Bool
+    } deriving (Generic, FromJSON)
 
 
 parseConfiguration :: ByteString -> Either String Configuration
