@@ -2,6 +2,7 @@
 
 module Euler.Chintz where
 
+import Data.List
 import Data.Text.Internal (Text)
 import GHC.Generics (Generic)
 
@@ -16,17 +17,12 @@ import System.FilePath.Glob
 
 data Configuration = Configuration
     { name :: String
-    , dependencies :: Object
+    , dependencies :: HM.HashMap Text [String]
     } deriving (Generic, FromJSON)
 
 
-getDependencies :: String -> [String] -> Text -> [String]
-getDependencies basePath elements key = do
-    let allDeps = mapM (elementDepdendencies basePath key) elements
-    ["foo", "bar", "lol"]
-
-
-uhhh basePath elements key = mapM (elementDepdendencies basePath key) elements
+getDependencies :: String -> [String] -> Text -> IO [String]
+getDependencies basePath elements key = fmap (nub . concat) $ mapM (elementDepdendencies basePath key) elements
 
 
 elementDepdendencies :: String -> Text -> String -> IO [String]
@@ -42,12 +38,7 @@ elementDepdendencies basePath key element = do
 
             case deps of
                 Nothing -> return []
-                Just deps' -> return ["deps'"]
-
-
-unwrap val = do
-    case val of
-        Right v -> v
+                Just deps' -> return deps'
 
 
 elementConfiguration :: String -> String -> IO BS.ByteString
