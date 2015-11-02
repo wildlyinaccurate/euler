@@ -21,19 +21,23 @@ data Configuration = Configuration
     } deriving (Generic, FromJSON)
 
 
-uniqueMapOverIO :: (Eq a, Traversable t) => (a -> IO [a]) -> t a -> IO [a]
-uniqueMapOverIO f a = fmap (nub . concat) $ mapM f a
+concatMapM :: (Monad m) => (a -> m [b]) -> [a] -> m [b]
+concatMapM f xs = fmap concat (mapM f xs)
+
+
+uniqConcatMapM :: (Eq a, Monad m) => (a -> m [a]) -> [a] -> m [a]
+uniqConcatMapM f xs = fmap nub (concatMapM f xs)
 
 
 getDependencies :: String -> [String] -> Text -> IO [String]
 getDependencies basePath elements key = do
-    expandedElements <- uniqueMapOverIO (expandElements basePath) elements
+    expandedElements <- uniqConcatMapM (expandElements basePath) elements
     getDependencies' basePath expandedElements key
 
 
 -- Won't expand the elements dependencies
 getDependencies' :: String -> [String] -> Text -> IO [String]
-getDependencies' basePath elements key = uniqueMapOverIO (elementDepdendencies basePath key) elements
+getDependencies' basePath elements key = uniqConcatMapM (elementDepdendencies basePath key) elements
 
 
 expandElements :: String -> String -> IO [String]
@@ -43,7 +47,7 @@ expandElements basePath element = expandElements' basePath [] [element]
 expandElements' :: String -> [String] -> [String] -> IO [String]
 expandElements' basePath prev [] = return prev
 expandElements' basePath prev curr = do
-    found <- uniqueMapOverIO (elementDepdendencies basePath "elements") curr
+    found <- uniqConcatMapM (elementDepdendencies basePath "elements") curr
     expandElements' basePath (nub $ prev ++ curr ++ found) found
 
 

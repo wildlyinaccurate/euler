@@ -5,7 +5,7 @@ module Euler.Pipeline where
 import Data.ByteString (ByteString)
 
 import Euler.Parser
-import Euler.Chintz (expandElements, getDependencies', uniqueMapOverIO)
+import Euler.Chintz (expandElements, getDependencies', uniqConcatMapM)
 
 
 build :: ByteString -> IO String
@@ -17,7 +17,7 @@ build config = do
         Right config' -> do
             let base = "./components"
             let elements = (map name (components config'))
-            expandedElements <- uniqueMapOverIO (expandElements base) elements
+            expandedElements <- uniqConcatMapM (expandElements base) elements
 
             let getDeps = getDependencies' base expandedElements
             jsDeps <- getDeps "js"
