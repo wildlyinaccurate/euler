@@ -2,4 +2,4 @@ name: dove
 dependencies:
   css: [ atoms/base/base.css, molecules/dove/dove.css ]
   js: [ molecules/dove/dove.js ]
-  elements: [ faux-block-link ]
+  elements: [ group-title ]

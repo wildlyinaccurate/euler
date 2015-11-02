@@ -5,7 +5,7 @@ module Euler.Pipeline where
 import Data.ByteString (ByteString)
 
 import Euler.Parser
-import Euler.Chintz (getDependencies)
+import Euler.Chintz (expandElements, getDependencies', uniqueMapOverIO)
 
 
 build :: ByteString -> IO String
@@ -15,7 +15,12 @@ build config = do
             error $ "Invalid Configuration: " ++ err
 
         Right config' -> do
-            let getDeps = getDependencies "./components" (map name (components config'))
+            let base = "./components"
+            let elements = (map name (components config'))
+            expandedElements <- uniqueMapOverIO (expandElements base) elements
+
+            let getDeps = getDependencies' base expandedElements
             jsDeps <- getDeps "js"
             cssDeps <- getDeps "css"
+
             return $ show $ jsDeps ++ cssDeps
