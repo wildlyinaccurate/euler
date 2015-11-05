@@ -8,6 +8,7 @@ import Euler.Assets (publishAssets)
 import Euler.Chintz (expandElements, getDependencies')
 import Euler.Control.Monad.Extra
 import Euler.Parser
+import Euler.Types
 
 
 build :: ByteString -> IO String
@@ -17,19 +18,28 @@ build config = do
             error $ "Invalid Configuration: " ++ err
 
         Right config' -> do
-            let componentsPath = "./components/"
             let elements = getComponents config'
-            expandedElements <- uniqConcatMapM (expandElements componentsPath) elements
+            results <- mapM processComponent elements
 
-            let getDeps = getDependencies' componentsPath expandedElements
-            jsDeps <- getDeps "js"
-            cssDeps <- getDeps "css"
-
-            jsAssets <- publishAssets componentsPath jsDeps
-            cssAssets <- publishAssets componentsPath cssDeps
-
-            return $ show $ jsAssets ++ cssDeps
+            return $ show $ results
 
 
 getComponents :: Configuration -> [String]
 getComponents = map name . components
+
+
+processComponent :: String -> IO Component
+processComponent component = do
+    let componentsPath = "./components/"
+    expandedElements <- uniqConcatMapM (expandElements componentsPath) [component]
+
+    let getDeps = getDependencies' componentsPath expandedElements
+    jsDeps <- getDeps "js"
+    cssDeps <- getDeps "css"
+
+    jsAssets <- publishAssets componentsPath jsDeps
+    cssAssets <- publishAssets componentsPath cssDeps
+
+    let processed = (component, [("js", jsAssets), ("css", cssAssets)])
+
+    return processed

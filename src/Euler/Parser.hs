@@ -9,11 +9,11 @@ import Data.Yaml (decodeEither)
 
 
 data Configuration = Configuration
-    { components :: [Component]
+    { components :: [ConfigurationComponent]
     } deriving (Generic, FromJSON)
 
 
-data Component = Component
+data ConfigurationComponent = ConfigurationComponent
     { name :: String
     , mandatory :: Bool
     } deriving (Generic, FromJSON)
