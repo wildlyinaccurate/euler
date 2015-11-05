@@ -1,6 +1,11 @@
 module Euler.Types where
 
 
-type Component = (String, [AssetMap])
+data Component = Component
+    { name :: String
+    , template :: String
+    , assets :: [AssetMap]
+    , manifest :: String
+    } deriving (Show)
 
 type AssetMap = (String, [String])

@@ -12,8 +12,8 @@ publishAssets componentsPath origins = mapM (publishAsset componentsPath) origin
 
 publishAsset :: String -> String -> IO String
 publishAsset componentsPath origin = do
-    let originPath = componentsPath ++ origin
-    let publishedPath = "./assets/" ++ origin
+    let originPath = componentsPath </> origin
+    let publishedPath = "assets" </> origin
 
     createDirectoryIfMissing True (dropFileName publishedPath)
     copyFile originPath publishedPath

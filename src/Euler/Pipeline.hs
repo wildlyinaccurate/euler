@@ -7,8 +7,9 @@ import Data.ByteString (ByteString)
 import Euler.Assets (publishAssets)
 import Euler.Chintz (expandElements, getDependencies')
 import Euler.Control.Monad.Extra
+import Euler.Manifest (publishManifest)
 import Euler.Parser
-import Euler.Types
+import Euler.Types hiding (name)
 
 
 build :: ByteString -> IO String
@@ -25,13 +26,15 @@ build config = do
 
 
 getComponents :: Configuration -> [String]
-getComponents = map name . components
+getComponents = (map name) . components
 
 
 processComponent :: String -> IO Component
 processComponent component = do
-    let componentsPath = "./components/"
+    let componentsPath = "components"
     expandedElements <- uniqConcatMapM (expandElements componentsPath) [component]
+
+    let template = ""
 
     let getDeps = getDependencies' componentsPath expandedElements
     jsDeps <- getDeps "js"
@@ -40,6 +43,8 @@ processComponent component = do
     jsAssets <- publishAssets componentsPath jsDeps
     cssAssets <- publishAssets componentsPath cssDeps
 
-    let processed = (component, [("js", jsAssets), ("css", cssAssets)])
+    let assets = [("js", jsAssets), ("css", cssAssets)]
 
-    return processed
+    manifest <- publishManifest component assets
+
+    return $ Component component template assets manifest
