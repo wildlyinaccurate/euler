@@ -23,6 +23,7 @@ executable euler
       base >=4.8 && <4.9
     , aeson >=0.10 && <0.11
     , bytestring >=0.10 && <0.11
+    , directory >=1.2 && <1.3
     , filepath >=1.4 && <1.5
     , Glob >=0.7 && <0.8
     , text >=1.2 && <1.3

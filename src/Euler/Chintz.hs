@@ -14,19 +14,13 @@ import qualified Data.HashMap.Strict as HM
 import Data.Yaml (decodeEither)
 import System.FilePath.Glob
 
+import Euler.Control.Monad.Extra
+
 
 data Configuration = Configuration
     { name :: String
     , dependencies :: HM.HashMap Text [String]
     } deriving (Generic, FromJSON)
-
-
-concatMapM :: (Monad m) => (a -> m [b]) -> [a] -> m [b]
-concatMapM f xs = fmap concat (mapM f xs)
-
-
-uniqConcatMapM :: (Eq a, Monad m) => (a -> m [a]) -> [a] -> m [a]
-uniqConcatMapM f xs = fmap nub (concatMapM f xs)
 
 
 getDependencies :: String -> [String] -> Text -> IO [String]

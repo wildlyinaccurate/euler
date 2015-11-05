@@ -4,8 +4,10 @@ module Euler.Pipeline where
 
 import Data.ByteString (ByteString)
 
+import Euler.Assets (publishAssets)
+import Euler.Chintz (expandElements, getDependencies')
+import Euler.Control.Monad.Extra
 import Euler.Parser
-import Euler.Chintz (expandElements, getDependencies', uniqConcatMapM)
 
 
 build :: ByteString -> IO String
@@ -15,12 +17,19 @@ build config = do
             error $ "Invalid Configuration: " ++ err
 
         Right config' -> do
-            let base = "./components"
-            let elements = (map name (components config'))
-            expandedElements <- uniqConcatMapM (expandElements base) elements
+            let componentsPath = "./components/"
+            let elements = getComponents config'
+            expandedElements <- uniqConcatMapM (expandElements componentsPath) elements
 
-            let getDeps = getDependencies' base expandedElements
+            let getDeps = getDependencies' componentsPath expandedElements
             jsDeps <- getDeps "js"
             cssDeps <- getDeps "css"
 
-            return $ show $ jsDeps ++ cssDeps
+            jsAssets <- publishAssets componentsPath jsDeps
+            cssAssets <- publishAssets componentsPath cssDeps
+
+            return $ show $ jsAssets ++ cssDeps
+
+
+getComponents :: Configuration -> [String]
+getComponents = map name . components
