@@ -8,4 +8,5 @@ data Component = Component
     , manifest :: String
     } deriving (Show)
 
+
 type AssetMap = (String, [String])

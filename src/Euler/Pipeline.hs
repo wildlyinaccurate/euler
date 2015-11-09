@@ -12,7 +12,7 @@ import Euler.Parser
 import Euler.Types hiding (name)
 
 
-build :: ByteString -> IO String
+build :: ByteString -> IO [Component]
 build config = do
     case parseConfiguration config of
         Left err ->
@@ -22,7 +22,7 @@ build config = do
             let elements = getComponents config'
             results <- mapM processComponent elements
 
-            return $ show $ results
+            return results
 
 
 getComponents :: Configuration -> [String]
@@ -45,6 +45,6 @@ processComponent component = do
 
     let assets = [("js", jsAssets), ("css", cssAssets)]
 
-    manifest <- publishManifest component assets
+    manifest <- publishManifest component template assets
 
     return $ Component component template assets manifest
