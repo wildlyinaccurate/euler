@@ -67,5 +67,11 @@ elementConfiguration basePath element = do
     BS.readFile $ head configPath
 
 
+elementMustachePath :: FilePath -> String -> IO FilePath
+elementMustachePath basePath element = do
+    paths <- glob $ basePath </> "[amo]*" </> element </> element <.> "mustache"
+    return $ head paths
+
+
 parseConfiguration :: BS.ByteString -> Either String Configuration
 parseConfiguration = decodeEither

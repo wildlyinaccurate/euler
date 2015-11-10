@@ -5,7 +5,7 @@ module Euler.Pipeline where
 import Data.ByteString (ByteString)
 
 import Euler.Assets (publishAssets)
-import Euler.Chintz (expandElements, getDependencies')
+import Euler.Chintz (expandElements, getDependencies', elementMustachePath)
 import Euler.Control.Monad.Extra
 import Euler.Manifest (publishManifest)
 import Euler.Parser
@@ -32,9 +32,9 @@ getComponents = (map name) . components
 processComponent :: String -> IO Component
 processComponent component = do
     let componentsPath = "components"
-    expandedElements <- uniqConcatMapM (expandElements componentsPath) [component]
 
-    let template = ""
+    expandedElements <- uniqConcatMapM (expandElements componentsPath) [component]
+    template <- elementMustachePath componentsPath component
 
     let getDeps = getDependencies' componentsPath expandedElements
     jsDeps <- getDeps "js"
