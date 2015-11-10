@@ -3,7 +3,6 @@
 module Euler.Chintz where
 
 import Data.List
-import Data.Text.Internal (Text)
 import GHC.Generics (Generic)
 
 import qualified Data.ByteString as BS
@@ -19,18 +18,18 @@ import Euler.Control.Monad.Extra
 
 data Configuration = Configuration
     { name :: String
-    , dependencies :: HM.HashMap Text [String]
+    , dependencies :: HM.HashMap String [String]
     } deriving (Generic, FromJSON)
 
 
-getDependencies :: FilePath -> [String] -> Text -> IO [FilePath]
+getDependencies :: FilePath -> [String] -> String -> IO [FilePath]
 getDependencies basePath elements key = do
     expandedElements <- uniqConcatMapM (expandElements basePath) elements
     getDependencies' basePath expandedElements key
 
 
 -- Won't expand the elements dependencies
-getDependencies' :: FilePath -> [String] -> Text -> IO [FilePath]
+getDependencies' :: FilePath -> [String] -> String -> IO [FilePath]
 getDependencies' basePath elements key = uniqConcatMapM (elementDepdendencies basePath key) elements
 
 
@@ -45,7 +44,7 @@ expandElements' basePath prev curr = do
     expandElements' basePath (nub $ prev ++ curr ++ found) found
 
 
-elementDepdendencies :: FilePath -> Text -> String -> IO [String]
+elementDepdendencies :: FilePath -> String -> String -> IO [String]
 elementDepdendencies basePath key element = do
     config <- elementConfiguration basePath element
 
