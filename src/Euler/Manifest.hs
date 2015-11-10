@@ -8,6 +8,7 @@ import System.FilePath
 import GHC.Generics (Generic)
 
 import Data.Aeson
+import Data.Aeson.Encode.Pretty (encodePretty)
 import qualified Data.ByteString.Lazy as BS
 
 import Euler.Component
@@ -43,7 +44,7 @@ publishManifest component template assets = do
 
 
 buildManifest :: String -> [AssetMap] -> BS.ByteString
-buildManifest template assets = encode $ Manifest template (expandAssets assets)
+buildManifest template assets = encodePretty $ Manifest template (expandAssets assets)
 
 
 expandAssets :: [AssetMap] -> [Asset]
