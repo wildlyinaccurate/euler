@@ -13,20 +13,14 @@ import Euler.Component hiding (name)
 
 
 build :: ByteString -> IO [Component]
-build config = do
-    case parseConfiguration config of
-        Left err ->
-            error $ "Invalid Configuration: " ++ err
-
-        Right config' -> do
-            let elements = getComponents config'
-            results <- mapM processComponent elements
-
-            return results
+build input = do
+    case parseConfiguration input of
+        Left err -> error $ "Invalid Configuration: " ++ err
+        Right config -> mapM processComponent (componentNames config)
 
 
-getComponents :: Configuration -> [String]
-getComponents = (map name) . components
+componentNames :: Configuration -> [String]
+componentNames = (map name) . components
 
 
 processComponent :: String -> IO Component

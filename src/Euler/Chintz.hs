@@ -23,29 +23,29 @@ data Configuration = Configuration
     } deriving (Generic, FromJSON)
 
 
-getDependencies :: String -> [String] -> Text -> IO [String]
+getDependencies :: FilePath -> [String] -> Text -> IO [String]
 getDependencies basePath elements key = do
     expandedElements <- uniqConcatMapM (expandElements basePath) elements
     getDependencies' basePath expandedElements key
 
 
 -- Won't expand the elements dependencies
-getDependencies' :: String -> [String] -> Text -> IO [String]
+getDependencies' :: FilePath -> [String] -> Text -> IO [String]
 getDependencies' basePath elements key = uniqConcatMapM (elementDepdendencies basePath key) elements
 
 
-expandElements :: String -> String -> IO [String]
+expandElements :: FilePath -> String -> IO [String]
 expandElements basePath element = expandElements' basePath [] [element]
 
 
-expandElements' :: String -> [String] -> [String] -> IO [String]
+expandElements' :: FilePath -> [String] -> [String] -> IO [String]
 expandElements' basePath prev [] = return prev
 expandElements' basePath prev curr = do
     found <- uniqConcatMapM (elementDepdendencies basePath "elements") curr
     expandElements' basePath (nub $ prev ++ curr ++ found) found
 
 
-elementDepdendencies :: String -> Text -> String -> IO [String]
+elementDepdendencies :: FilePath -> Text -> String -> IO [String]
 elementDepdendencies basePath key element = do
     config <- elementConfiguration basePath element
 
@@ -61,7 +61,7 @@ elementDepdendencies basePath key element = do
                 Just deps' -> return deps'
 
 
-elementConfiguration :: String -> String -> IO BS.ByteString
+elementConfiguration :: FilePath -> String -> IO BS.ByteString
 elementConfiguration basePath element = do
     configPath <- glob $ basePath </> "[amo]*" </> element </> element <.> "yaml"
     BS.readFile $ head configPath
