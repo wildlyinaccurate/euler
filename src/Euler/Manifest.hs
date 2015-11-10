@@ -10,7 +10,7 @@ import GHC.Generics (Generic)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as BS
 
-import Euler.Types
+import Euler.Component
 
 
 data Manifest = Manifest

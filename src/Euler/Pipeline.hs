@@ -9,7 +9,7 @@ import Euler.Chintz (expandElements, getDependencies')
 import Euler.Control.Monad.Extra
 import Euler.Manifest (publishManifest)
 import Euler.Parser
-import Euler.Types hiding (name)
+import Euler.Component hiding (name)
 
 
 build :: ByteString -> IO [Component]

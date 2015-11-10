@@ -1,4 +1,4 @@
-module Euler.Types where
+module Euler.Component where
 
 
 data Component = Component

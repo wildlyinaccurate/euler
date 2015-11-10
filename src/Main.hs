@@ -3,7 +3,7 @@ module Main where
 import qualified Data.ByteString as BS
 import System.Directory (canonicalizePath)
 
-import Euler.Types
+import Euler.Component
 import Euler.Pipeline
 
 main :: IO ()
