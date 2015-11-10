@@ -23,14 +23,14 @@ data Configuration = Configuration
     } deriving (Generic, FromJSON)
 
 
-getDependencies :: FilePath -> [String] -> Text -> IO [String]
+getDependencies :: FilePath -> [String] -> Text -> IO [FilePath]
 getDependencies basePath elements key = do
     expandedElements <- uniqConcatMapM (expandElements basePath) elements
     getDependencies' basePath expandedElements key
 
 
 -- Won't expand the elements dependencies
-getDependencies' :: FilePath -> [String] -> Text -> IO [String]
+getDependencies' :: FilePath -> [String] -> Text -> IO [FilePath]
 getDependencies' basePath elements key = uniqConcatMapM (elementDepdendencies basePath key) elements
 
 
@@ -50,8 +50,7 @@ elementDepdendencies basePath key element = do
     config <- elementConfiguration basePath element
 
     case parseConfiguration config of
-        Left err -> do
-            return []
+        Left err -> return []
 
         Right config' -> do
             let deps = HM.lookup key $ dependencies config'

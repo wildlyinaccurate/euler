@@ -3,14 +3,12 @@ module Euler.Assets where
 import System.Directory
 import System.FilePath
 
-import Euler.Control.Monad.Extra
 
-
-publishAssets :: String -> [String] -> IO [String]
+publishAssets :: FilePath -> [String] -> IO [FilePath]
 publishAssets componentsPath origins = mapM (publishAsset componentsPath) origins
 
 
-publishAsset :: String -> String -> IO String
+publishAsset :: FilePath -> String -> IO FilePath
 publishAsset componentsPath origin = do
     let originPath = componentsPath </> origin
     let publishedPath = "assets" </> origin
