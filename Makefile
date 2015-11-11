@@ -12,7 +12,10 @@ all: clean build test
 
 test: $(layouts)
 	@for layout in $^ ; do \
-		cat $$layout | euler ; \
+		echo "Building $$layout through stdin" && \
+		cat $$layout | euler && \
+		echo "Building $$layout as an argument" && \
+		euler $$layout  ; \
 	done
 
 build:
